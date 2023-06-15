@@ -1,0 +1,44 @@
+version: '3'
+services:
+  app:
+    container_name: restapi-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mysql
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+    volumes:
+      - ./src:/app/src
+  mysql:
+    container_name: mysql-server
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: restapi_db
+      MYSQL_USER: fateh
+      MYSQL_PASSWORD: fatehPassword
+    volumes:
+      - ./data:/var/lib/mysql
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8881:80'
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: fateh
+      PMA_PASSWORD: fatehPassword
+      PMA_ARBITRARY: 1
+volumes:
+  mysql-data:
+
